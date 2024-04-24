@@ -34,8 +34,8 @@
 
 .EXAMPLE
     $data = @{
-        username = "user123"
-        password = "pass123"
+        username = "tony.stark"
+        password = "v3ry@S3!cure"
     }
     New-SecretifySecret -Data $data -TypeIdentifier "credentials" -ExpiresAt "24h" -Views 2 -IsDestroyable $true -HasPassphrase $false 
     This example creates a secret of type 'credentials' with similar settings as the first example, storing username and password details securely.

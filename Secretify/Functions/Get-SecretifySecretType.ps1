@@ -44,11 +44,10 @@ function Get-SecretifySecretType {
         if ($typeResponse.data.types) {
             # Output each type's identifier and details
             return $typeResponse.data.types
-
         } else {
-            Write-Output "No secret types found."
+            throw "No secret types found. You need at least one type to perfom any actions."
         }
     } catch {
-        Write-Error "Failed to retrieve secret types. Error: $($_.Exception.Message)"
+        throw "Failed to retrieve secret types. Error: $($_.Exception.Message)"
     }
 }

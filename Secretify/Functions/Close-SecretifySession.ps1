@@ -28,7 +28,6 @@ function Close-SecretifySession {
         Write-Verbose "Secretify session successfully closed."
     }
     catch {
-        Write-Error "Failed to close Secretify session. Error: $($_.Exception.Message)"
-        throw
+        throw "Failed to close Secretify session. Error: $($_.Exception.Message)"
     }
 }

@@ -64,8 +64,7 @@ function Read-SecretifySecret {
         } elseif ($Identifier -and $Key) {
             $secretUrl = "$($SecretifySession.Url)/api/v1/secret/$Identifier/_cipher"
         } else {
-            Write-Error "Insufficient parameters provided to retrieve and decrypt the secret."
-            return $null
+            throw "Insufficient parameters provided to retrieve and decrypt the secret."
         }
 
 
@@ -73,11 +72,10 @@ function Read-SecretifySecret {
         $response = Invoke-RestMethod -Uri $secretUrl -Method Get -Headers $headers -StatusCodeVariable statusCode
 
         if ($statusCode -ne 200) {
-            Write-Error "Failed to retrieve secret. Error: $statusCode"
-            return
+            throw "Failed to retrieve secret. Error: $statusCode"
         }
         $cipher = $response.data.cipher | ConvertFrom-Json
-        Write-Debug "Cipher object: $(ConvertTo-Json -InputObject $cipher)"
+        Write-Verbose "Cipher object: $(ConvertTo-Json -InputObject $cipher)"
 
         $decryptedAttributes = @{}
         $decryptionKey = ConvertFrom-Base64Url -base64Url $Key
@@ -92,7 +90,6 @@ function Read-SecretifySecret {
         return [PSCustomObject]$decryptedAttributes
 
     } catch {
-        Write-Error "Failed to reveal secret. Error: $($_.Exception.Message)"
-        return $null
+        throw "Failed to reveal secret. Error: $($_.Exception.Message)"
     }
 }

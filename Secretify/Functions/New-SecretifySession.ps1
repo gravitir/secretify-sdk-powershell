@@ -58,25 +58,22 @@ function New-SecretifySession {
                 $SecretifySession.Url = $Url
                 
                 # Create a hashtable to display session information
-                $sessionInfo = @{
+                return @{
                     "Session Started At" = $SecretifySession.StartTime
                     "Client ID" = $SecretifySession.ClientId
                     "URL" = $SecretifySession.Url
                 }
-                # Output the hashtable to the console
-                $sessionInfo 
             }
             else {
-                Write-Error "Failed to authenticate. Error: $response"
+                throw "Failed to authenticate. Error: $response"
             }
             
         }
         catch [System.Net.WebException] {
-            Write-Error "Network error occurred: $_.Exception.Message"
+            throw "Network error occurred: $_.Exception.Message"
         }
         catch {
-            Write-Error "Failed to authenticate. Error: $_.Exception.Message"
-            throw
+            throw "Failed to authenticate. Error: $_.Exception.Message"
         }
     }
 }

@@ -22,8 +22,7 @@ function Get-SecretifySession {
 
     # Check if the SecretifySession hashtable has been initialized
     if ($null -eq $SecretifySession -or $null -eq $SecretifySession.StartTime) {
-        Write-Error "SecretifySession has not been initialized. Please initialize the session first."
-        return
+        throw "SecretifySession has not been initialized. Please initialize the session first."
     }
 
     # Create a hashtable to display session information
