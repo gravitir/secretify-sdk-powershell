@@ -1,49 +1,61 @@
-Using module Secretify
+Remove-Module Secretify
+Import-Module .\Secretify.psd1
 
-$VerbosePreference = 'SilentlyContinue' # `Continue` for debugging else `SilentlyContinue`
-$DebugPreference = 'Continue' # `Continue` for debugging else `SilentlyContinue`
+$Url = "https://lab.secretify.io"
+$ClientId = "CLIENTID"
+$ClientSecret = "SECRET"
 
-# Initialize the Secretify instance
-$sify = [Secretify]::new("https://lab.secretify.io")
 
-# Read ClientSecret securely from the console
-$credential = Get-Credential -Message "Enter your client credentials"
-$ClientID = $credential.UserName
-$ClientSecret = $credential.GetNetworkCredential().Password
+#####################  Start a new Session #####################
+Write-Host "`nNew Session Starting" -ForegroundColor red
+New-SecretifySession -Url $Url -ClientId $ClientId -ClientSecret $ClientSecret
 
-# Authenticate
-try {
-  $sify.Authenticate($AUTH_GRANT_CLIENTCREDENTIALS, @{
-      ClientID     = $ClientID
-      ClientSecret = $ClientSecret
-    })
-}
-catch {
-  Write-Error "Authentication failed. Error: $($Error[0])"
-  return
-}
 
-# Create a new secret
-try {
-  $secret = $sify.Create(
-    "text", # this is the type
-    @{  
-      message = "Foobar"
-    },
-    @{
-      expiresAt = "24h"
-      views     = "10"
-    }
-  )
-  
-  Write-Host "Created secret:`n$($secret | ConvertTo-Json -Depth 4)"
-}
-catch {
-  Write-Error "Creation failed. Error: $($Error[0])"
-  return
+#####################  Get the secret types #####################
+#Write-Host "`nAvailable secret types" -ForegroundColor red
+#$types = Get-SecretifySecretType
+#Write-output $types
+
+#####################  Create a secret with text #####################
+
+# Define the hashtable for a Message type secret
+$data = @{
+    message  = "This is a secure message"
 }
 
-# Reveal it here right away
-$decrypted = $sify.Reveal($secret.Identifier, $secret.Key)
-# $decrypted = $sify.RevealLink($secret.Link)
-Write-Host "`nRevealed Message:`n$($decrypted | ConvertTo-Json -Depth 4)`n"
+# Call the function with parameters hashtable
+Write-Host "`nCreating New Secret Message" -ForegroundColor red 
+$return = New-SecretifySecret -Data $data -TypeIdentifier "text" -ExpiresAt "24h" -Views 2 -IsDestroyable $true -HasPassphrase $false 
+$return
+
+## Reveal the secret
+Write-Host "`nRevealing secret with link: $($return.Link)" -ForegroundColor Cyan
+Read-SecretifySecret -Url $return.Link
+
+Write-Host "`nRevealing secret with Identifier: $($return.Identifier) and Key: $($return.Key)" -ForegroundColor Cyan
+Read-SecretifySecret -Identifier $return.Identifier -Key $return.Key
+
+
+#####################  Create a secret with credentials #####################
+
+# Define the hashtable for a Credential type secret
+$data = @{
+    username       = "user123"
+    password       = "pass123"
+}
+
+# Call the function with parameters hashtable
+Write-Host "`nCreating New Secret Credential" -ForegroundColor red 
+$return = New-SecretifySecret -Data $data -TypeIdentifier "credentials" -ExpiresAt "24h" -Views 2 -IsDestroyable $true -HasPassphrase $false 
+$return
+
+## Reveal the secret
+Write-Host "`nRevealing secret with link: $($return.Link)" -ForegroundColor Cyan
+Read-SecretifySecret -Url $return.Link
+
+Write-Host "`nRevealing secret with Identifier: $($return.Identifier) and Key: $($return.Key)" -ForegroundColor Cyan
+Read-SecretifySecret -Identifier $return.Identifier -Key $return.Key
+
+#####################  Close Session #####################
+Write-Host "`nClosing Session" -ForegroundColor red
+Close-SecretifySession
