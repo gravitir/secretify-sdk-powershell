@@ -97,7 +97,6 @@ $data = @{
     password       = "v3ry@S3!cure"
 }
 
-Write-Host "`nCreating New Secret Credential" -ForegroundColor red 
 $secret = New-SecretifySecret -Data $data -TypeIdentifier "credentials" -ExpiresAt "24h" -Views 2 -IsDestroyable $true -HasPassphrase $false
 ```
 

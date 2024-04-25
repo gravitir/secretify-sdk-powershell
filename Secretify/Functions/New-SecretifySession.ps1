@@ -67,7 +67,6 @@ function New-SecretifySession {
             else {
                 throw "Failed to authenticate. Error: $response"
             }
-            
         }
         catch [System.Net.WebException] {
             throw "Network error occurred: $_.Exception.Message"
