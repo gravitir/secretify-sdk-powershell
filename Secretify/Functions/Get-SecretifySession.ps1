@@ -21,16 +21,21 @@ function Get-SecretifySession {
     param ()
 
     # Check if the SecretifySession hashtable has been initialized
-    if ($null -eq $SecretifySession -or $null -eq $SecretifySession.StartTime) {
+    if ($null -eq $SecretifySession -or $SecretifySession.Count -eq 0 -or !$SecretifySession.Url) {
         throw "SecretifySession has not been initialized. Please initialize the session first."
     }
 
     # Create a hashtable to display session information
-    # Using the [ordered] type accelerator to keep the keys in the order they are added
     return [ordered]@{
-        StartTime       = $SecretifySession.StartTime
-        ClientID        = $SecretifySession.ClientId
-        URL             = $SecretifySession.Url
-        RemainingTime  = ($SecretifySession.StartTime.AddHours(1) - (Get-Date)).ToString("hh\:mm\:ss")
+        Authenticated = if ($null -ne $SecretifySession.Authenticated) { $SecretifySession.Authenticated } else { $null }
+        StartTime     = if ($SecretifySession.StartTime) { $SecretifySession.StartTime } else { $null }
+        Username      = if ($SecretifySession.Username) { $SecretifySession.Username } else { $null }
+        URL           = $SecretifySession.Url
+        RemainingTime = if ($SecretifySession.StartTime) {
+                            ($SecretifySession.StartTime.AddHours(1) - (Get-Date)).ToString("hh\:mm\:ss")
+        }
+        else {
+            $null
+        }
     }
 }

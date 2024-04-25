@@ -27,8 +27,9 @@ Get-ChildItem -Path $PSScriptRoot/Functions -Filter *.ps1 -Recurse | ForEach-Obj
 
 # Define module-wide variables or session state if needed
 $SecretifySession = [ordered]@{
+    Authenticated       = $null
     Url                 = $null
-    ClientId            = $null
+    Username            = $null
     ApiVersion          = $null
     AuthToken           = $null
     StartTime           = $null
