@@ -76,6 +76,7 @@ $cred = Get-Credential
 New-SecretifySession -Url "https://example.secretify.io" -Username $cred.UserName -Password $cred.GetNetworkCredential().Password
 ```
 
+**Note**: Username is referred to as the ClientID, and password is the Client Secret provided from Microsoft Entra.
 
 ### Create secret
 
