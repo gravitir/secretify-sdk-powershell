@@ -57,11 +57,12 @@ function New-SecretifySession {
                 $SecretifySession.StartTime = Get-Date
                 $SecretifySession.Url = $Url
                 
-                # Create a hashtable to display session information
-                return @{
-                    "Session Started At" = $SecretifySession.StartTime
-                    "Client ID" = $SecretifySession.ClientId
-                    "URL" = $SecretifySession.Url
+                # Return newly created session
+                return [ordered]@{
+                    StartTime          = $SecretifySession.StartTime
+                    ClientID           = $SecretifySession.ClientId
+                    URL                = $SecretifySession.Url
+                    RemainingTime      = ($SecretifySession.StartTime.AddHours(1) - (Get-Date)).ToString("hh\:mm\:ss")
                 }
             }
             else {

@@ -28,9 +28,9 @@ function Get-SecretifySession {
     # Create a hashtable to display session information
     # Using the [ordered] type accelerator to keep the keys in the order they are added
     return [ordered]@{
-        "Session Started At" = $SecretifySession.StartTime
-        "Client ID" = $SecretifySession.ClientId
-        "URL" = $SecretifySession.Url
-        "Remaining Time" = ($SecretifySession.StartTime.AddHours(1) - (Get-Date)).ToString("hh\:mm\:ss")
+        StartTime       = $SecretifySession.StartTime
+        ClientID        = $SecretifySession.ClientId
+        URL             = $SecretifySession.Url
+        RemainingTime  = ($SecretifySession.StartTime.AddHours(1) - (Get-Date)).ToString("hh\:mm\:ss")
     }
 }

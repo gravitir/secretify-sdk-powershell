@@ -106,12 +106,10 @@ function New-SecretifySecret {
             $body['cipher'][$DataName] = $encryptedData
         }
 
-        $body = $body | ConvertTo-Json
-
         $APIurl = "$($SecretifySession.Url)/api/v1/secret"
 
         try {
-            $response = Invoke-RestMethod -Uri $APIurl -Method Post -Headers $headers -Body $body -ContentType "application/json"
+            $response = Invoke-RestMethod -Uri $APIurl -Method Post -Headers $headers -Body $($body | ConvertTo-Json) -ContentType "application/json"
             return @{
                 Link       = "$($SecretifySession.Url)/s/$($response.data.identifier)#$base64UrlKey"
                 Identifier = $response.data.identifier
