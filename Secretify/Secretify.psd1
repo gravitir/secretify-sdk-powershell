@@ -1,10 +1,10 @@
 @{
-    ModuleVersion     = '1.0'
+    ModuleVersion     = '1.3'
     GUID              = '8158d204-6b45-4654-b123-4fad0e1d6e5e'
     Author            = 'Gravitir AG'
     CompanyName       = 'Gravitir AG'
     Copyright         = 'Copyright (c) 2024 Gravitir AG. All rights reserved.'
-    Description       = 'Module for Secretify API' 
+    Description       = 'The safe way to share or transfer secrets.' 
     PowerShellVersion = '7.0'
     RootModule        = 'Secretify.psm1'
 

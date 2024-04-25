@@ -73,7 +73,7 @@ To authenticate with Secretify, use the `New-SecretifySession` cmdlet. This cmdl
 ```powershell
 $cred = Get-Credential
 
-New-SecretifySession -Url "https://example.secretify.io" -ClientId $credential.UserName -ClientSecret $credential.GetNetworkCredential().Password
+New-SecretifySession -Url "https://example.secretify.io" -ClientId $cred.UserName -ClientSecret $cred.GetNetworkCredential().Password
 ```
 
 
