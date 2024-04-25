@@ -2,13 +2,11 @@ Remove-Module Secretify
 Import-Module .\Secretify.psd1
 
 $Url = "https://lab.secretify.io"
-$Username = "YOUR_CLIENTID"
-$Password = "YOUR_CLIENTSECRET"
-
+$cred = Get-Credential -Message "Enter your Secretify credentials"
 
 #####################  Start a new Session #####################
 Write-Host "`nNew Session Starting" -ForegroundColor red
-New-SecretifySession -Url $Url Username $Username Password $Password
+New-SecretifySession -Url $Url -Credential $cred
 
 
 #####################  Get the secret types #####################

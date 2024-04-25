@@ -73,7 +73,7 @@ To authenticate with Secretify, use the `New-SecretifySession` cmdlet. This cmdl
 ```powershell
 $cred = Get-Credential
 
-New-SecretifySession -Url "https://example.secretify.io" -Username $cred.UserName -Password $cred.GetNetworkCredential().Password
+New-SecretifySession -Url "https://example.secretify.io" -Credential $cred
 ```
 
 **Note**: Username is referred to as the ClientID, and password is the Client Secret provided from Microsoft Entra.

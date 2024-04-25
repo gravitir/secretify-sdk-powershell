@@ -8,14 +8,11 @@
 .PARAMETER Url
     Specifies the base URL of the API for which authentication is being performed. This URL should direct to the API's authentication endpoint.
 
-.PARAMETER Username
-    The client identifier as registered with the API's identity provider. This ID is unique to the client and is used to identify it during the authentication process.
-
-.PARAMETER Password
-    The secret associated with the client identifier. This should be protected as it is used to secure the authentication process.
+.PARAMETER Credential
+    Specifies the PSCredential object containing the client identifier and secret. The client identifier is the username, and the secret is the password.
 
 .EXAMPLE
-    $token = New-SecretifySession -Url "https://secretify.com" Username "myUseranme" Password "myPassword"
+    $token = New-SecretifySession -Url "https://secretify.com" -Credential $cred
     This example demonstrates how to authenticate and store the returned access token in the session.
 
 .NOTES
@@ -28,14 +25,10 @@ function New-SecretifySession {
         [Parameter(Mandatory)]
         [string]$Url,
 
-        [Parameter()]
-        [string]$Username,
-
-        [Parameter()]
-        [string]$Password
+        [PSCredential]$Credential
     )
 
-    if (!$Username -and !$Password) {
+    if (!$Credential) {
         if ($PSCmdlet.ShouldProcess("Authenticating with $Url", "Without authentication")) {
             $healthcheckUrl = "$Url/api/v1"
             try {
@@ -66,8 +59,8 @@ function New-SecretifySession {
         $authUrl = "$Url/api/v1/auth/microsoftonline"
         $authBody = @{
             grant_type    = "client_credentials"
-            client_id     = $Username
-            client_secret = $Password
+            client_id     = $Credential.UserName
+            client_secret = $Credential.GetNetworkCredential().Password
         } | ConvertTo-Json
 
         try {
@@ -75,7 +68,7 @@ function New-SecretifySession {
             $response = Invoke-RestMethod -Uri $authUrl -Method Post -Body $authBody -ContentType "application/json"
             Write-Verbose "Access Token obtained successfully"
             $SecretifySession.Authenticated = $true
-            $SecretifySession.Username = $Username
+            $SecretifySession.Username = $Credential.UserName
             $SecretifySession.ApiVersion = "v1"
             $SecretifySession.AuthToken = $response.data.access_token
             $SecretifySession.StartTime = Get-Date
