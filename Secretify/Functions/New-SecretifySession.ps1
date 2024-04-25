@@ -40,24 +40,18 @@ function New-SecretifySession {
             $healthcheckUrl = "$Url/api/v1"
             try {
                 Write-Verbose "Attempting healthcheck to $healthcheckUrl"
-                $response = Invoke-RestMethod -Uri $healthcheckUrl -Method Get -StatusCodeVariable statusCode 
-
-                if ($statusCode -eq 200) {
-                    Write-Verbose "Healthcheck was successfully"
-                    $SecretifySession.Authenticated = $false
-                    $SecretifySession.ApiVersion = "v1"
-                    $SecretifySession.Url = $Url
-        
-                    return [ordered]@{
-                        Authenticated = $SecretifySession.Authenticated
-                        StartTime     = $null
-                        Username      = $null
-                        URL           = $SecretifySession.Url
-                        RemainingTime = $null
-                    }
-                }
-                else {
-                    throw "Failed healthcheck. Error: $response"
+                $response = Invoke-RestMethod -Uri $healthcheckUrl -Method Get
+                Write-Verbose "Healthcheck was successfully"
+                $SecretifySession.Authenticated = $false
+                $SecretifySession.ApiVersion = "v1"
+                $SecretifySession.Url = $Url
+    
+                return [ordered]@{
+                    Authenticated = $SecretifySession.Authenticated
+                    StartTime     = $null
+                    Username      = $null
+                    URL           = $SecretifySession.Url
+                    RemainingTime = $null
                 }
             }
             catch [System.Net.WebException] {
@@ -78,28 +72,22 @@ function New-SecretifySession {
 
         try {
             Write-Verbose "Attempting to authenticate to $authUrl"
-            $response = Invoke-RestMethod -Uri $authUrl -Method Post -Body $authBody -ContentType "application/json" -StatusCodeVariable statusCode 
-
-            if ($statusCode -eq 200 -and $response.data.access_token) {
-                Write-Verbose "Access Token obtained successfully"
-                $SecretifySession.Authenticated = $true
-                $SecretifySession.Username = $Username
-                $SecretifySession.ApiVersion = "v1"
-                $SecretifySession.AuthToken = $response.data.access_token
-                $SecretifySession.StartTime = Get-Date
-                $SecretifySession.Url = $Url
-                
-                # Return newly created session
-                return [ordered]@{
-                    Authenticated = $SecretifySession.Authenticated
-                    StartTime     = $SecretifySession.StartTime
-                    Username      = $SecretifySession.Username
-                    URL           = $SecretifySession.Url
-                    RemainingTime = ($SecretifySession.StartTime.AddHours(1) - (Get-Date)).ToString("hh\:mm\:ss")
-                }
-            }
-            else {
-                throw "Failed to authenticate. Error: $response"
+            $response = Invoke-RestMethod -Uri $authUrl -Method Post -Body $authBody -ContentType "application/json"
+            Write-Verbose "Access Token obtained successfully"
+            $SecretifySession.Authenticated = $true
+            $SecretifySession.Username = $Username
+            $SecretifySession.ApiVersion = "v1"
+            $SecretifySession.AuthToken = $response.data.access_token
+            $SecretifySession.StartTime = Get-Date
+            $SecretifySession.Url = $Url
+            
+            # Return newly created session
+            return [ordered]@{
+                Authenticated = $SecretifySession.Authenticated
+                StartTime     = $SecretifySession.StartTime
+                Username      = $SecretifySession.Username
+                URL           = $SecretifySession.Url
+                RemainingTime = ($SecretifySession.StartTime.AddHours(1) - (Get-Date)).ToString("hh\:mm\:ss")
             }
         }
         catch [System.Net.WebException] {

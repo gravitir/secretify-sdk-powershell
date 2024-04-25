@@ -71,11 +71,8 @@ function Read-SecretifySecret {
 
 
         Write-Verbose "Retrieving encrypted data from $secretUrl"
-        $response = Invoke-RestMethod -Uri $secretUrl -Method Get -Headers $headers -StatusCodeVariable statusCode
+        $response = Invoke-RestMethod -Uri $secretUrl -Method Get -Headers $headers
 
-        if ($statusCode -ne 200) {
-            throw "Failed to retrieve secret. Error: $statusCode"
-        }
         $cipher = $response.data.cipher | ConvertFrom-Json
         Write-Verbose "Cipher object: $(ConvertTo-Json -InputObject $cipher)"
 

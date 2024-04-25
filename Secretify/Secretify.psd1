@@ -5,7 +5,7 @@
     CompanyName       = 'Gravitir AG'
     Copyright         = 'Copyright (c) 2024 Gravitir AG. All rights reserved.'
     Description       = 'The safe way to share or transfer secrets.'
-    PowerShellVersion = '7.0'
+    PowerShellVersion = '5.0'
     RootModule        = 'Secretify.psm1'
 
     FunctionsToExport = @(  'New-SecretifySession',
