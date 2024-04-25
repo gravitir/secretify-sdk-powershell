@@ -60,10 +60,10 @@ function New-SecretifySecret {
         [Parameter(Mandatory)]
         [string]$TypeIdentifier,
 
-        [string]$ExpiresAt="24h",
-        [int]$Views=1,
-        [bool]$IsDestroyable=$false,
-        [bool]$HasPassphrase=$false
+        [string]$ExpiresAt = "24h",
+        [int]$Views = 1,
+        [bool]$IsDestroyable = $false,
+        [bool]$HasPassphrase = $false
     )
 
     if ($PSCmdlet.ShouldProcess("Creating a secret with TypeIdentifier '$($TypeIdentifier)' at '$Url'", "CreateSecret")) {

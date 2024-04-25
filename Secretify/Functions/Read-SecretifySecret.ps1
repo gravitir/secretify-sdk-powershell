@@ -35,13 +35,13 @@
 function Read-SecretifySecret {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [string]$Url,
 
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [string]$Identifier,
 
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [string]$Key
     )
 
@@ -51,7 +51,7 @@ function Read-SecretifySecret {
             "Content-Type"  = "application/json"
         }
 
-        if ($Url -match '\/s\/.+?#')  {
+        if ($Url -match '\/s\/.+?#') {
             # Assuming the URL is a complete secret link
             $secretLinkParts = $Url -split '#'
             $baseUrl = $secretLinkParts[0] -replace '\/s\/.*$', ''
@@ -61,9 +61,11 @@ function Read-SecretifySecret {
             $secretUrl = "$baseUrl/api/v1/secret/$Identifier/_cipher"
             Write-Verbose "Parsed URL for Base URL: $baseUrl, Identifier: $identifier, Key: $key"
 
-        } elseif ($Identifier -and $Key) {
+        }
+        elseif ($Identifier -and $Key) {
             $secretUrl = "$($SecretifySession.Url)/api/v1/secret/$Identifier/_cipher"
-        } else {
+        }
+        else {
             throw "Insufficient parameters provided to retrieve and decrypt the secret."
         }
 
@@ -89,7 +91,8 @@ function Read-SecretifySecret {
         Write-Verbose "Successfully decrypted the data."
         return [PSCustomObject]$decryptedAttributes
 
-    } catch {
+    }
+    catch {
         throw "Failed to reveal secret. Error: $($_.Exception.Message)"
     }
 }

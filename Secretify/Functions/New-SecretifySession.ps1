@@ -80,7 +80,7 @@ function New-SecretifySession {
             Write-Verbose "Attempting to authenticate to $authUrl"
             $response = Invoke-RestMethod -Uri $authUrl -Method Post -Body $authBody -ContentType "application/json" -StatusCodeVariable statusCode 
 
-            if ($statusCode -eq 200 && $response.data.access_token) {
+            if ($statusCode -eq 200 -and $response.data.access_token) {
                 Write-Verbose "Access Token obtained successfully"
                 $SecretifySession.Authenticated = $true
                 $SecretifySession.Username = $Username
