@@ -10,6 +10,9 @@
 
 .PARAMETER Credential
     Specifies the PSCredential object containing the client identifier and secret. The client identifier is the username, and the secret is the password.
+    
+.PARAMETER Proxy
+    Optional. Specifies the proxy server to use for the API requests.    
 
 .EXAMPLE
     $token = New-SecretifySession -Url "https://secretify.com" -Credential $cred
@@ -25,7 +28,9 @@ function New-SecretifySession {
         [Parameter(Mandatory)]
         [string]$Url,
 
-        [PSCredential]$Credential
+        [PSCredential]$Credential,
+
+        [string]$Proxy
     )
 
     if (!$Credential) {
@@ -33,7 +38,11 @@ function New-SecretifySession {
             $healthcheckUrl = "$Url/api/v1"
             try {
                 Write-Verbose "Attempting healthcheck to $healthcheckUrl"
-                $response = Invoke-RestMethod -Uri $healthcheckUrl -Method Get
+                if ($Proxy) {
+                    $response = Invoke-RestMethod -Uri $healthcheckUrl -Method Get -Proxy $Proxy
+                } else {
+                    $response = Invoke-RestMethod -Uri $healthcheckUrl -Method Get
+                }
                 Write-Verbose "Healthcheck was successfully"
                 $SecretifySession.Authenticated = $false
                 $SecretifySession.ApiVersion = "v1"
@@ -65,7 +74,11 @@ function New-SecretifySession {
 
         try {
             Write-Verbose "Attempting to authenticate to $authUrl"
-            $response = Invoke-RestMethod -Uri $authUrl -Method Post -Body $authBody -ContentType "application/json"
+            if ($Proxy) {
+                $response = Invoke-RestMethod -Uri $authUrl -Method Post -Body $authBody -ContentType "application/json" -Proxy $Proxy
+            } else {
+                $response = Invoke-RestMethod -Uri $authUrl -Method Post -Body $authBody -ContentType "application/json"
+            }
             Write-Verbose "Access Token obtained successfully"
             $SecretifySession.Authenticated = $true
             $SecretifySession.Username = $Credential.UserName
