@@ -33,6 +33,7 @@ $SecretifySession = [ordered]@{
     ApiVersion          = $null
     AuthToken           = $null
     StartTime           = $null
+    Proxy               = $null
     #LastCommand         = $null
     #LastCommandTime     = $null
     #LastCommandResults  = $null

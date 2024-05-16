@@ -25,9 +25,6 @@
 .PARAMETER HasPassphrase
     Optional. Specifies whether a passphrase is required to access the secret. Defaults to false.
 
-.PARAMETER Proxy
-    Optional. Specifies the proxy server to use for the API requests.    
-
 .EXAMPLE
     $data = @{
         Message = "This is a secure message"
@@ -66,8 +63,7 @@ function New-SecretifySecret {
         [string]$ExpiresAt = "24h",
         [int]$Views = 1,
         [bool]$IsDestroyable = $false,
-        [bool]$HasPassphrase = $false,
-        [string]$Proxy
+        [bool]$HasPassphrase = $false
     )
 
     if ($PSCmdlet.ShouldProcess("Creating a secret with TypeIdentifier '$($TypeIdentifier)' at '$Url'", "CreateSecret")) {
@@ -80,8 +76,8 @@ function New-SecretifySecret {
         $typesUrl = "$($SecretifySession.Url)/api/v1/type"
 
         try {
-            if ($Proxy) {
-                $typeResponse = Invoke-RestMethod -Uri $typesUrl -Method Get -Headers $headers -ContentType "application/json" -Proxy $Proxy
+            if ($SecretifySession.Proxy) {
+                $typeResponse = Invoke-RestMethod -Uri $typesUrl -Method Get -Headers $headers -ContentType "application/json" -Proxy $SecretifySession.Proxy
             } else {
                 $typeResponse = Invoke-RestMethod -Uri $typesUrl -Method Get -Headers $headers -ContentType "application/json"
             }
@@ -117,8 +113,8 @@ function New-SecretifySecret {
         $APIurl = "$($SecretifySession.Url)/api/v1/secret"
 
         try {
-            if ($Proxy) {
-                $response = Invoke-RestMethod -Uri $APIurl -Method Post -Headers $headers -Body $($body | ConvertTo-Json) -ContentType "application/json" -Proxy $Proxy
+            if ($SecretifySession.Proxy) {
+                $response = Invoke-RestMethod -Uri $APIurl -Method Post -Headers $headers -Body $($body | ConvertTo-Json) -ContentType "application/json" -Proxy $SecretifySession.Proxy
             } else {
                 $response = Invoke-RestMethod -Uri $APIurl -Method Post -Headers $headers -Body $($body | ConvertTo-Json) -ContentType "application/json"
             }

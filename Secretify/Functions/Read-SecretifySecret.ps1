@@ -16,9 +16,6 @@
 .PARAMETER Key
     The decryption key required to access the secret. This parameter is required if Identifier is provided.
 
-.PARAMETER Proxy
-    Optional. Specifies the proxy server to use for the API requests.    
-
 .EXAMPLE
     Read-SecretifySecret -Url "https://secretify.com/s/12345#keyHere"
     This command parses the complete URL to extract the base URL, identifier, and decryption key to retrieve the secret.
@@ -45,9 +42,7 @@ function Read-SecretifySecret {
         [string]$Identifier,
 
         [Parameter(Mandatory = $false)]
-        [string]$Key,
-
-        [string]$Proxy
+        [string]$Key
     )
 
     try {
@@ -77,8 +72,8 @@ function Read-SecretifySecret {
 
         Write-Verbose "Retrieving encrypted data from $secretUrl"
         
-        if ($Proxy) {
-            $response = Invoke-RestMethod -Uri $secretUrl -Method Get -Headers $headers -Proxy $Proxy
+        if ($SecretifySession.Proxy) {
+            $response = Invoke-RestMethod -Uri $secretUrl -Method Get -Headers $headers -Proxy $SecretifySession.Proxy
         } else {
             $response = Invoke-RestMethod -Uri $secretUrl -Method Get -Headers $headers
         }

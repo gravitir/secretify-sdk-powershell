@@ -31,6 +31,7 @@ function Get-SecretifySession {
         StartTime     = if ($SecretifySession.StartTime) { $SecretifySession.StartTime } else { $null }
         Username      = if ($SecretifySession.Username) { $SecretifySession.Username } else { $null }
         URL           = $SecretifySession.Url
+        Proxy         = if ($SecretifySession.Proxy) { $SecretifySession.Proxy } else { $null }
         RemainingTime = if ($SecretifySession.StartTime) {
                             ($SecretifySession.StartTime.AddHours(1) - (Get-Date)).ToString("hh\:mm\:ss")
         }

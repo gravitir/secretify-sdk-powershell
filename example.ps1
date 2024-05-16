@@ -11,8 +11,8 @@ New-SecretifySession -Url $Url -Credential $cred
 
 #####################  Get Secretify Session #####################
 Write-Host "`nGet Current Session" -ForegroundColor red
-$types = Get-SecretifySession
-Write-output $typesclear
+$Session = Get-SecretifySession
+Write-output $Session
 
 
 #####################  Get the secret types #####################
@@ -73,12 +73,17 @@ if($Proxy){
     Write-Host "`nNew Session Starting" -ForegroundColor red
     New-SecretifySession -Url $Url -Credential $cred -Proxy $Proxy
 
+    #####################  Get Secretify Session #####################
+    Write-Host "`nGet Current Session" -ForegroundColor red
+    $Session = Get-SecretifySession
+    Write-output $Session
+
     #####################  Get the secret types #####################
     Write-Host "`nAvailable secret types" -ForegroundColor red
-    $types = Get-SecretifySecretType -Proxy $Proxy
+    $types = Get-SecretifySecretType
     Write-output $types
 
-    #####################  Create a secret with text (PROXY) #####################
+    #####################  Create a secret with text #####################
 
     # Define the hashtable for a Message type secret
     $data = @{
@@ -87,18 +92,18 @@ if($Proxy){
 
     # Call the function with parameters hashtable
     Write-Host "`nCreating New Secret Message" -ForegroundColor red 
-    $return = New-SecretifySecret -Data $data -TypeIdentifier "text" -ExpiresAt "24h" -Views 2 -IsDestroyable $true -HasPassphrase $false -Proxy $Proxy
+    $return = New-SecretifySecret -Data $data -TypeIdentifier "text" -ExpiresAt "24h" -Views 2 -IsDestroyable $true -HasPassphrase $false
     $return
 
     ## Reveal the secret
     Write-Host "`nRevealing secret with link: $($return.Link)" -ForegroundColor Cyan
-    Read-SecretifySecret -Url $return.Link -Proxy $Proxy
+    Read-SecretifySecret -Url $return.Link
 
     Write-Host "`nRevealing secret with Identifier: $($return.Identifier) and Key: $($return.Key)" -ForegroundColor Cyan
-    Read-SecretifySecret -Identifier $return.Identifier -Key $return.Key -Proxy $Proxy
+    Read-SecretifySecret -Identifier $return.Identifier -Key $return.Key
 
 
-    #####################  Create a secret with credentials (PROXY) #####################
+    #####################  Create a secret with credentials #####################
 
     # Define the hashtable for a Credential type secret
     $data = @{
@@ -108,15 +113,15 @@ if($Proxy){
 
     # Call the function with parameters hashtable
     Write-Host "`nCreating New Secret Credential" -ForegroundColor red 
-    $return = New-SecretifySecret -Data $data -TypeIdentifier "credentials" -ExpiresAt "24h" -Views 2 -IsDestroyable $true -HasPassphrase $false -Proxy $Proxy
+    $return = New-SecretifySecret -Data $data -TypeIdentifier "credentials" -ExpiresAt "24h" -Views 2 -IsDestroyable $true -HasPassphrase $false
     $return
 
     ## Reveal the secret
     Write-Host "`nRevealing secret with link: $($return.Link)" -ForegroundColor Cyan
-    Read-SecretifySecret -Url $return.Link -Proxy $Proxy
+    Read-SecretifySecret -Url $return.Link
 
     Write-Host "`nRevealing secret with Identifier: $($return.Identifier) and Key: $($return.Key)" -ForegroundColor Cyan
-    Read-SecretifySecret -Identifier $return.Identifier -Key $return.Key -Proxy $Proxy
+    Read-SecretifySecret -Identifier $return.Identifier -Key $return.Key 
 
     #####################  Close Session #####################
     Write-Host "`nClosing Session" -ForegroundColor red

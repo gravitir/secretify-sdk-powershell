@@ -6,9 +6,6 @@
     This function queries the Secretify service API to retrieve a list of all available secret types. 
     Each secret type's identifier and description are displayed, providing insight into the different kinds of secrets that can be managed through the service.
 
-.PARAMETER Proxy
-    Optional. Specifies the proxy server to use for the API requests.    
-
 .EXAMPLE
     Get-SecretifySecretType
     Retrieves and displays all secret types available in the Secretify service, showing their identifiers and descriptions. 
@@ -25,9 +22,7 @@
 
 function Get-SecretifySecretType {
     [CmdletBinding()]
-    param(
-        [string]$Proxy
-    )
+    param()
 
     # Construct the URL to access the secret types
     $typesUrl = "$($SecretifySession.Url)/api/v1/type"
@@ -41,8 +36,8 @@ function Get-SecretifySecretType {
     try {
         # Send a GET request to retrieve the secret types
         
-        if ($Proxy) {
-            $typeResponse = Invoke-RestMethod -Uri $typesUrl -Method Get -Headers $headers -Proxy $Proxy
+        if ($SecretifySession.Proxy) {
+            $typeResponse = Invoke-RestMethod -Uri $typesUrl -Method Get -Headers $headers -Proxy $SecretifySession.Proxy
         } else {
             $typeResponse = Invoke-RestMethod -Uri $typesUrl -Method Get -Headers $headers
         }

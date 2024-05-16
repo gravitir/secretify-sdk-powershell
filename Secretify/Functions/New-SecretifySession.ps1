@@ -10,7 +10,7 @@
 
 .PARAMETER Credential
     Specifies the PSCredential object containing the client identifier and secret. The client identifier is the username, and the secret is the password.
-    
+
 .PARAMETER Proxy
     Optional. Specifies the proxy server to use for the API requests.    
 
@@ -30,7 +30,7 @@ function New-SecretifySession {
 
         [PSCredential]$Credential,
 
-        [string]$Proxy
+        [string]$Proxy = $null
     )
 
     if (!$Credential) {
@@ -47,12 +47,14 @@ function New-SecretifySession {
                 $SecretifySession.Authenticated = $false
                 $SecretifySession.ApiVersion = "v1"
                 $SecretifySession.Url = $Url
+                $SecretifySession.Proxy = $Proxy
     
                 return [ordered]@{
                     Authenticated = $SecretifySession.Authenticated
                     StartTime     = $null
                     Username      = $null
                     URL           = $SecretifySession.Url
+                    Proxy         = $SecretifySession.Proxy
                     RemainingTime = $null
                 }
             }
@@ -86,6 +88,7 @@ function New-SecretifySession {
             $SecretifySession.AuthToken = $response.data.access_token
             $SecretifySession.StartTime = Get-Date
             $SecretifySession.Url = $Url
+            $SecretifySession.Proxy = $Proxy
             
             # Return newly created session
             return [ordered]@{
@@ -93,6 +96,7 @@ function New-SecretifySession {
                 StartTime     = $SecretifySession.StartTime
                 Username      = $SecretifySession.Username
                 URL           = $SecretifySession.Url
+                Proxy         = $SecretifySession.Proxy
                 RemainingTime = ($SecretifySession.StartTime.AddHours(1) - (Get-Date)).ToString("hh\:mm\:ss")
             }
         }
