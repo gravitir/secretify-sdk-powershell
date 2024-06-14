@@ -1,9 +1,9 @@
 Remove-Module Secretify
 Import-Module .\Secretify\Secretify.psd1
 
-$Proxy = "http://127.0.0.1:8080"
+#$Proxy = "http://127.0.0.1:8080"
 $Url = "https://lab.secretify.io"
-$cred = Get-Credential -Message "Enter your Secretify credentials"
+#$cred = Get-Credential -Message "Enter your Secretify credentials"
 
 #####################  Start a new Session #####################
 Write-Host "`nNew Session Starting" -ForegroundColor red
@@ -45,7 +45,7 @@ Read-SecretifySecret -Identifier $return.Identifier -Key $return.Key
 # Define the hashtable for a Credential type secret
 $data = @{
     username       = "user123"
-    password       = "pass123"
+    password       = Get-RandomPassword -Length 30
 }
 
 # Call the function with parameters hashtable
@@ -108,7 +108,7 @@ if($Proxy){
     # Define the hashtable for a Credential type secret
     $data = @{
         username       = "user123"
-        password       = "pass123"
+        password       = Get-RandomPassword -Length 30
     }
 
     # Call the function with parameters hashtable

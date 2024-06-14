@@ -13,7 +13,8 @@
                             'Get-SecretifySession', 
                             'New-SecretifySecret', 
                             'Read-SecretifySecret',
-                            'Get-SecretifySecretType')
+                            'Get-SecretifySecretType',
+                            'Get-RandomPassword')
 
     NestedModules     = @('.\Private\Crypto.ps1')
     #VariablesToExport = @('*')  # Export all variables if needed
