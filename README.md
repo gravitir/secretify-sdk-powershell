@@ -117,6 +117,22 @@ or
 Read-SecretifySecret -Identifier $secret.Identifier -Key $secret.Key
 ```
 
+### Generate random password
+
+To generate a random password, use the `Get-RandomPassword` cmdlet. You can specify the length and the types of characters to include in the password. 
+Default values are: length 30, include numbers, symbols, lowercase, and uppercase letters.   
+
+
+```powershell
+$randomPassword = Get-RandomPassword
+```
+
+You can adjust the length and character inclusion parameters as needed, minimun length is 5 characters. 
+
+```powershell
+$randomPassword = Get-RandomPassword -Length 8 -IncludeNumbers $true -IncludeSymbols $false -IncludeLowercase $true -IncludeUppercase $true
+```
+
 ### Logout
 
 To close the Secretify session and log out, use the `Close-SecretifySession` cmdlet.
