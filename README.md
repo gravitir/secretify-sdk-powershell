@@ -127,10 +127,16 @@ Default values are: length 30, include numbers, symbols, lowercase, and uppercas
 $randomPassword = Get-RandomPassword
 ```
 
-You can adjust the length and character inclusion parameters as needed, minimun length is 5 characters. 
+You can adjust the length and character inclusion parameters as needed, minimum length is 5 characters.
 
 ```powershell
-$randomPassword = Get-RandomPassword -Length 8 -IncludeNumbers $true -IncludeSymbols $false -IncludeLowercase $true -IncludeUppercase $true
+$randomPassword = Get-RandomPassword -Length 12 -IncludeNumbers $true -IncludeSymbols $false -IncludeLowercase $true -IncludeUppercase $true
+```
+
+You can also exclude specific characters from the generated password.
+
+```powershell
+$randomPassword = Get-RandomPassword -Length 10 -Exclude "()$"
 ```
 
 ### Logout
