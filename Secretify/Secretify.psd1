@@ -1,5 +1,5 @@
 @{
-    ModuleVersion     = '1.4'
+    ModuleVersion     = '1.5'
     GUID              = '8158d204-6b45-4654-b123-4fad0e1d6e5e'
     Author            = 'Gravitir AG'
     CompanyName       = 'Gravitir AG'
